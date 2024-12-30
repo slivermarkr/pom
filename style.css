@@ -1,0 +1,22 @@
+body{
+	background-color:#36454F ;
+}
+
+.container{
+	background-color:#8A9A5B ;
+	width: 300px;
+	height: 400px;
+}
+
+body,
+.container{
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	align-text: text
+}
+
+h1, .timeContainer {
+	font-size: 4rem;
+}

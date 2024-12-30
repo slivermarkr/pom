@@ -1,16 +1,7 @@
-//const classicOption = {
-//  time: MIN * 25,
-//  shortBreak: MIN * 5,
-//  long: MIN * 10,
-//};
-//const extendedOption = {
-//  time: MIN * 60,
-//  shortBreak: MIN * 10,
-//  long: MIN * 20,
-//};
-
 function Pomodoro() {
   const MIN = 1000 * 60;
+
+  let timerId = undefined;
 
   const getTimeData = function ({ time, short, long }) {
     // we are converting minutes to milliseconds.
@@ -22,7 +13,7 @@ function Pomodoro() {
     return timeData;
   };
 
-  const initTimer = function (timeInput) {
+  const initTimer = function (timeInput, displayCallback) {
     //timeInput comes in millisecons.
     const time = {
       min: undefined,
@@ -30,21 +21,45 @@ function Pomodoro() {
       timeInMilli: timeInput,
     };
 
-    setInterval(function () {
+    timerId = setInterval(function () {
       time.timeInMilli = time.timeInMilli - 1000;
       time.min = Math.floor((time.timeInMilli % 3.6e6) / 60000);
       time.sec = Math.floor(((time.timeInMilli % 3.6e6) % 60000) / 1000);
-      console.log(time);
-      return time;
+      displayCallback(time);
     }, 1000);
   };
 
+  const getTimerId = () => timerId;
+
+  const pauseTimer = function () {
+    timerId = getTimerId();
+    clearInterval(timerId);
+  };
   return {
     getTimeData,
     initTimer,
+    pauseTimer,
   };
 }
+
 const pom = new Pomodoro();
 const millis = pom.getTimeData({ time: 25, short: 5, long: 10 });
-console.log(pom.initTimer(millis.time));
+let pausedData = undefined;
+
+pom.initTimer(millis.time, function (data) {
+  console.log(data);
+  pausedData = data;
+});
+
+setTimeout(function () {
+  pom.pauseTimer();
+  console.log("This is the paused data", pausedData);
+  setTimeout(function () {
+    pom.initTimer(pausedData.timeInMilli, function (data) {
+      console.log(data);
+      pausedData = data;
+    });
+  }, 3000);
+}, 3000);
+
 module.exports = Pomodoro;

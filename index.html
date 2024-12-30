@@ -3,8 +3,24 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Pomodoro</title>
+		<link rel="stylesheet" href="reset.css"></link>
+		<link rel="stylesheet" href="style.css"></link>
 	</head>
 	<body>
+		<h1>Pomodoro</h1>		
+		<div class="container">
+		<div class="timeContainer">
+		25:00
+		</div>
+		<div class="btnGroup">
+		<button>Start!</button>
+		<select>
+		<option id="pomodoro" selected>Pomodoro</option>
+		<option id="short">Short Break</option>
+		<option id="long">Long Break</option>
+		</select>
+		</div>
+		</div>
 		<script src="./src/main.js">
 		</script>
 	</body>

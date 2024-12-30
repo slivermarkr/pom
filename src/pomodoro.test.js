@@ -1,4 +1,4 @@
-const Pomodoro = require("./pomodoro.js");
+// const Pomodoro = require("./pomodoro.js");
 
 const pom = new Pomodoro();
 const MIN = 1000 * 60;

@@ -1,4 +1,4 @@
-function Pomodoro() {
+export function Pomodoro() {
   const MIN = 1000 * 60;
 
   let timerId = undefined;
@@ -41,25 +41,3 @@ function Pomodoro() {
     pauseTimer,
   };
 }
-
-const pom = new Pomodoro();
-const millis = pom.getTimeData({ time: 25, short: 5, long: 10 });
-let pausedData = undefined;
-
-pom.initTimer(millis.time, function (data) {
-  console.log(data);
-  pausedData = data;
-});
-
-setTimeout(function () {
-  pom.pauseTimer();
-  console.log("This is the paused data", pausedData);
-  setTimeout(function () {
-    pom.initTimer(pausedData.timeInMilli, function (data) {
-      console.log(data);
-      pausedData = data;
-    });
-  }, 3000);
-}, 3000);
-
-module.exports = Pomodoro;

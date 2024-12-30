@@ -1,51 +1,50 @@
-const MIN = 1000 * 60;
+//const classicOption = {
+//  time: MIN * 25,
+//  shortBreak: MIN * 5,
+//  long: MIN * 10,
+//};
+//const extendedOption = {
+//  time: MIN * 60,
+//  shortBreak: MIN * 10,
+//  long: MIN * 20,
+//};
 
-const classicOption = {
-  time: MIN * 25,
-  shortBreak: MIN * 5,
-  long: MIN * 10,
-};
-const extendedOption = {
-  time: MIN * 60,
-  shortBreak: MIN * 10,
-  long: MIN * 20,
-};
+function Pomodoro() {
+  const MIN = 1000 * 60;
 
-function pad(value) {
-  return String(value).padStart(2, "0");
-}
-
-function pomodoro() {
-  const getTime = function (option) {
-    if (option === "classic") {
-      return classicOption;
-    } else if (option === "extended") {
-      return extendedOption;
-    }
-    if (typeof option === "object") {
-      return option;
-    } else {
-      return "Invalid";
-    }
+  const getTimeData = function ({ time, short, long }) {
+    // we are converting minutes to milliseconds.
+    const timeData = {
+      time: MIN * time,
+      short: MIN * short,
+      long: MIN * long,
+    };
+    return timeData;
   };
 
-  const runPomodoro = function ({ time, long, shortBreak }) {
-    let remaining = time;
-    const timeObj = { minutes: undefined, seconds: undefined };
-    setInterval(function () {
-      remaining = remaining - 1000;
-      timeObj.minutes = Math.floor((remaining % 3.6e6) / 60000);
-      timeObj.seconds = Math.floor(((remaining % 3.6e6) % 60000) / 1000);
+  const initTimer = function (timeInput) {
+    //timeInput comes in millisecons.
+    const time = {
+      min: undefined,
+      sec: undefined,
+      timeInMilli: timeInput,
+    };
 
-      console.log(timeObj);
+    setInterval(function () {
+      time.timeInMilli = time.timeInMilli - 1000;
+      time.min = Math.floor((time.timeInMilli % 3.6e6) / 60000);
+      time.sec = Math.floor(((time.timeInMilli % 3.6e6) % 60000) / 1000);
+      console.log(time);
+      return time;
     }, 1000);
   };
+
   return {
-    runPomodoro,
-    getTime,
+    getTimeData,
+    initTimer,
   };
 }
-
-const pom = pomodoro();
-console.log(pom.runPomodoro(classicOption));
-module.exports = pomodoro;
+const pom = new Pomodoro();
+const millis = pom.getTimeData({ time: 25, short: 5, long: 10 });
+console.log(pom.initTimer(millis.time));
+module.exports = Pomodoro;

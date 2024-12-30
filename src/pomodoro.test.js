@@ -1,33 +1,24 @@
-const pomodoro = require("./pomodoro.js");
+const Pomodoro = require("./pomodoro.js");
 
-const pom = pomodoro();
+const pom = new Pomodoro();
 const MIN = 1000 * 60;
 
-test("test for the classic pomodoro option", function () {
-  expect(pom.getTime("classic")).toEqual({
-    time: MIN * 25,
-    shortBreak: MIN * 5,
-    long: MIN * 10,
-  });
+const result = {
+  time: MIN * 25,
+  short: MIN * 5,
+  long: MIN * 10,
+};
+
+const input = {
+  time: 25,
+  short: 5,
+  long: 10,
+};
+
+test("pom.getTimeData() should return an object w/ time converted in milliseconds", function () {
+  expect(pom.getTimeData(input)).toEqual(result);
 });
 
-test("test for the extended pomodoro option", function () {
-  expect(pom.getTime("extended")).toEqual({
-    time: MIN * 60,
-    shortBreak: MIN * 10,
-    long: MIN * 20,
-  });
-});
-
-test("test for the classic pomodoro option", function () {
-  expect(pom.getTime(4)).toBe("Invalid");
-});
-
-test("test for the custom pomodoro option", function () {
-  input = {
-    time: MIN * 45,
-    shortBreak: MIN * 5,
-    long: MIN * 10,
-  };
-  expect(pom.getTime(input)).toEqual(input);
+test("pom.initTimer() returns object w/ time remaining", function () {
+  expect(pom.initTimer(result.time)).toEqual({});
 });

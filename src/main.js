@@ -7,7 +7,9 @@ const selection = document.querySelector("#selection");
 
 const pom = new Pomodoro();
 
-const state = {};
+const state = {
+  isPaused: false,
+};
 
 const defaultTime = { time: 25, short: 5, long: 10 };
 let dataAfterPause = undefined;
@@ -29,17 +31,26 @@ function createBtn(type) {
 }
 container.addEventListener("click", (e) => {
   if (!e.target.id.includes("startBtn")) return;
-  console.log(e.target);
   const stopBtn = createBtn("Stop");
   selection.insertAdjacentElement("beforebegin", stopBtn);
 
+  let timeInMilliSeconds = pom.getTimeData(defaultTime);
+
+  if (state.isPaused) {
+    timeInMilliSeconds.time = dataAfterPause.timeInMilli;
+    state.isPaused = false;
+    console.log(timeInMilliSeconds);
+  }
+
   {
-    const timeInMilliSeconds = pom.getTimeData(defaultTime);
     pom.initTimer(timeInMilliSeconds.time, function updateDisplay(data) {
       timeContainer.textContent = "";
-      timeContainer.textContent = `${data.min}:${data.sec}`;
+      timeContainer.textContent = `${pad(data.min)}:${pad(data.sec)}`;
+
+      dataAfterPause = data;
     });
   }
+
   e.target.remove();
 });
 
@@ -47,13 +58,13 @@ container.addEventListener("click", (e) => {
   if (!e.target.id.includes("stopBtn")) return;
 
   const startBtn = createBtn("Start");
-
+  {
+    pom.pauseTimer();
+    state.isPaused = true;
+  }
   selection.insertAdjacentElement("beforebegin", startBtn);
   e.target.remove();
 });
-// startBtn.addEventListener("click", () => {
-//   startBtn.textContent = "Stop";
-// });
 
 //const millis = pom.getTimeData({ time: 25, short: 5, long: 10 });
 //let pausedData = undefined;

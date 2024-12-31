@@ -1,7 +1,5 @@
 import { Pomodoro } from "./pomodoro.js";
-const startBtn = document.querySelector("#startBtn");
 const container = document.querySelector(".container");
-const btnGrp = document.querySelector(".btnGroup");
 const timeContainer = document.querySelector(".timeContainer");
 const selection = document.querySelector("#selection");
 
@@ -31,6 +29,7 @@ function initDisplay(min, sec = "0") {
   timeContainer.textContent = "";
   timeContainer.textContent = `${pad(min)}:${pad(sec)}`;
 }
+
 function createBtn(type) {
   const btn = document.createElement("button");
   if (type === "Start") {
@@ -43,21 +42,43 @@ function createBtn(type) {
   return btn;
 }
 
+function toggleButtons(btnToCreate, btnToDelete, adjacentEl) {
+  const btn = document.createElement("button");
+  if (btnToCreate === "Start") {
+    btn.setAttribute("id", "startBtn");
+    btn.textContent = "Start!";
+  } else {
+    btn.setAttribute("id", "stopBtn");
+    btn.textContent = "Stop";
+  }
+  btnToDelete.remove();
+  adjacentEl.insertAdjacentElement("beforebegin", btn);
+}
+
 selection.addEventListener("change", (e) => {
+  let stopBtn = undefined;
+  if (document.querySelector("#stopBtn")) {
+    stopBtn = document.querySelector("#stopBtn");
+  }
   switch (selection.value) {
     case "Pomodoro":
       state.activeTimer = timeInMilliSeconds.time;
       dataAfterPause = undefined;
       pom.pauseTimer();
       initDisplay(defaultTime.time);
+      if (stopBtn) {
+        toggleButtons("Start", stopBtn, selection);
+      }
       break;
 
     case "Short Break":
       state.activeTimer = timeInMilliSeconds.short;
-      console.log(state.activeTimer);
       initDisplay(defaultTime.short);
       dataAfterPause = undefined;
       pom.pauseTimer();
+      if (stopBtn) {
+        toggleButtons("Start", stopBtn, selection);
+      }
       break;
 
     case "Long Break":
@@ -65,6 +86,9 @@ selection.addEventListener("change", (e) => {
       initDisplay(defaultTime.long);
       dataAfterPause = undefined;
       pom.pauseTimer();
+      if (stopBtn) {
+        toggleButtons("Start", stopBtn, selection);
+      }
       break;
     default:
       break;
@@ -82,7 +106,7 @@ container.addEventListener("click", (e) => {
 
   if (state.isPaused) {
     if (dataAfterPause) {
-      timeInMilliSeconds.time = dataAfterPause.timeInMilli;
+      state.activeTimer = dataAfterPause.timeInMilli;
     }
     runTheTimer(state.activeTimer);
     state.isPaused = false;

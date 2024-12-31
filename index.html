@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Pomodoro</title>
-		<link rel="stylesheet" href="./reset.css">
-		<link rel="stylesheet" href="./style.css">
-	</head>
-	<body>
-		<main>
-		<div class="headerContainer">
-			<h1>Pomodoro</h1>
-			<button>Settings</button>
-		</div>
-		<div class="container">
-		<div class="timeContainer">
-		25:00
-		</div>
-		<div class="btnGroup">
-		<button id="startBtn">Start!</button>
-		<select>
-		<option id="pomodoro" selected>Pomodoro</option>
-		<option id="short">Short Break</option>
-		<option id="long">Long Break</option>
-		</select>
-		</div>
-		</div>
-		</main>
-		<script type="module" src="./src/main.js"></script>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pomodoro</title>
+    <link rel="stylesheet" href="./reset.css" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <div class="headerContainer">
+        <h1>Pomodoro</h1>
+        <button>Settings</button>
+      </div>
+      <div class="container">
+        <div class="timeContainer">25:00</div>
+        <div class="btnGroup">
+          <button id="startBtn">Start!</button>
+          <select id="selection">
+            <option id="pomodoro" selected>Pomodoro</option>
+            <option id="short">Short Break</option>
+            <option id="long">Long Break</option>
+          </select>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="./src/main.js"></script>
+  </body>
 </html>

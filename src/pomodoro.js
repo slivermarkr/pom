@@ -22,6 +22,11 @@ export function Pomodoro() {
     };
 
     timerId = setInterval(function () {
+      if (time.timeInMilli === 0) {
+        pauseTimer();
+        return;
+      }
+
       time.timeInMilli = time.timeInMilli - 1000;
       time.min = Math.floor((time.timeInMilli % 3.6e6) / 60000);
       time.sec = Math.floor(((time.timeInMilli % 3.6e6) % 60000) / 1000);

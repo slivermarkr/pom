@@ -5,13 +5,15 @@ const selection = document.querySelector("#selection");
 
 const pom = new Pomodoro();
 
-const defaultTime = { time: 25, short: 5, long: 10 };
+const defaultTime = { time: 0.1, short: 0.1, long: 0.2 };
 let timeInMilliSeconds = pom.getTimeData(defaultTime);
 let dataAfterPause = undefined;
 
 const state = {
   isPaused: false,
   activeTimer: timeInMilliSeconds.time,
+  timerID: "Pomodoro",
+  loopCount: 0,
 };
 
 function pad(string) {
@@ -55,6 +57,47 @@ function toggleButtons(btnToCreate, btnToDelete, adjacentEl) {
   adjacentEl.insertAdjacentElement("beforebegin", btn);
 }
 
+function refresh(timerID) {
+  switch (timerID) {
+    case "Pomodoro":
+      ++state.loopCount;
+      if (state.loopCount === 4) {
+        state.loopCount = 0;
+        state.activeTimer = timeInMilliSeconds.long;
+        state.timerID = "Long Break";
+        initDisplay(defaultTime.long);
+      } else {
+        state.activeTimer = timeInMilliSeconds.short;
+        state.timerID = "Short Break";
+        initDisplay(defaultTime.short);
+      }
+      if (stopBtn) {
+        toggleButtons("Start", stopBtn, selection);
+      }
+      break;
+
+    case "Short Break":
+      state.activeTimer = timeInMilliSeconds.time;
+      state.timerID = "Pomodoro";
+      initDisplay(defaultTime.time);
+      if (stopBtn) {
+        toggleButtons("Start", stopBtn, selection);
+      }
+      break;
+
+    case "Long Break":
+      state.activeTimer = timeInMilliSeconds.time;
+      state.timerID = "Pomodoro";
+      initDisplay(defaultTime.time);
+      if (stopBtn) {
+        toggleButtons("Start", stopBtn, selection);
+      }
+      break;
+    default:
+      break;
+  }
+}
+
 selection.addEventListener("change", (e) => {
   let stopBtn = undefined;
   if (document.querySelector("#stopBtn")) {
@@ -63,6 +106,7 @@ selection.addEventListener("change", (e) => {
   switch (selection.value) {
     case "Pomodoro":
       state.activeTimer = timeInMilliSeconds.time;
+      state.timerID = selection.value;
       dataAfterPause = undefined;
       pom.pauseTimer();
       initDisplay(defaultTime.time);
@@ -73,6 +117,7 @@ selection.addEventListener("change", (e) => {
 
     case "Short Break":
       state.activeTimer = timeInMilliSeconds.short;
+      state.timerID = selection.value;
       initDisplay(defaultTime.short);
       dataAfterPause = undefined;
       pom.pauseTimer();
@@ -83,6 +128,7 @@ selection.addEventListener("change", (e) => {
 
     case "Long Break":
       state.activeTimer = timeInMilliSeconds.long;
+      state.timerID = selection.value;
       initDisplay(defaultTime.long);
       dataAfterPause = undefined;
       pom.pauseTimer();
@@ -112,6 +158,13 @@ container.addEventListener("click", (e) => {
     state.isPaused = false;
   } else {
     runTheTimer(state.activeTimer);
+
+    setTimeout(function just() {
+      pom.pauseTimer();
+      console.log("before", state);
+      refresh(state.timerID);
+      console.log("after", state);
+    }, state.activeTimer);
   }
 
   e.target.remove();

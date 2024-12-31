@@ -5,7 +5,7 @@ const selection = document.querySelector("#selection");
 
 const pom = new Pomodoro();
 
-const defaultTime = { time: 0.1, short: 0.1, long: 0.2 };
+const defaultTime = { time: 0.1, short: 0.1, long: 0.1 };
 let timeInMilliSeconds = pom.getTimeData(defaultTime);
 let dataAfterPause = undefined;
 
@@ -14,6 +14,7 @@ const state = {
   activeTimer: timeInMilliSeconds.time,
   timerID: "Pomodoro",
   loopCount: 0,
+  streak: 0,
 };
 
 function pad(string) {
@@ -57,41 +58,56 @@ function toggleButtons(btnToCreate, btnToDelete, adjacentEl) {
   adjacentEl.insertAdjacentElement("beforebegin", btn);
 }
 
+function updateState(selectionId) {
+  let stopBtn = undefined;
+  if (document.querySelector("#stopBtn")) {
+    stopBtn = document.querySelector("#stopBtn");
+  }
+  switch (selectionId) {
+    case "Pomodoro":
+      state.activeTimer = timeInMilliSeconds.time;
+      state.timerID = selectionId;
+      initDisplay(defaultTime.time);
+      break;
+
+    case "Short Break":
+      state.activeTimer = timeInMilliSeconds.short;
+      state.timerID = selectionId;
+      initDisplay(defaultTime.short);
+      break;
+
+    case "Long Break":
+      state.activeTimer = timeInMilliSeconds.long;
+      state.timerID = selectionId;
+      initDisplay(defaultTime.long);
+      break;
+    default:
+      break;
+  }
+  if (stopBtn) {
+    toggleButtons("Start", stopBtn, selection);
+  }
+}
+
 function refresh(timerID) {
   switch (timerID) {
     case "Pomodoro":
       ++state.loopCount;
       if (state.loopCount === 4) {
         state.loopCount = 0;
-        state.activeTimer = timeInMilliSeconds.long;
-        state.timerID = "Long Break";
-        initDisplay(defaultTime.long);
+        state.streak++;
+        updateState("Long Break");
       } else {
-        state.activeTimer = timeInMilliSeconds.short;
-        state.timerID = "Short Break";
-        initDisplay(defaultTime.short);
-      }
-      if (stopBtn) {
-        toggleButtons("Start", stopBtn, selection);
+        updateState("Short Break");
       }
       break;
 
     case "Short Break":
-      state.activeTimer = timeInMilliSeconds.time;
-      state.timerID = "Pomodoro";
-      initDisplay(defaultTime.time);
-      if (stopBtn) {
-        toggleButtons("Start", stopBtn, selection);
-      }
+      updateState("Pomodoro");
       break;
 
     case "Long Break":
-      state.activeTimer = timeInMilliSeconds.time;
-      state.timerID = "Pomodoro";
-      initDisplay(defaultTime.time);
-      if (stopBtn) {
-        toggleButtons("Start", stopBtn, selection);
-      }
+      updateState("Pomodoro");
       break;
     default:
       break;
@@ -99,42 +115,24 @@ function refresh(timerID) {
 }
 
 selection.addEventListener("change", (e) => {
-  let stopBtn = undefined;
-  if (document.querySelector("#stopBtn")) {
-    stopBtn = document.querySelector("#stopBtn");
-  }
+  console.log(selection.value);
   switch (selection.value) {
     case "Pomodoro":
-      state.activeTimer = timeInMilliSeconds.time;
-      state.timerID = selection.value;
+      updateState(selection.value);
       dataAfterPause = undefined;
       pom.pauseTimer();
-      initDisplay(defaultTime.time);
-      if (stopBtn) {
-        toggleButtons("Start", stopBtn, selection);
-      }
       break;
 
     case "Short Break":
-      state.activeTimer = timeInMilliSeconds.short;
-      state.timerID = selection.value;
-      initDisplay(defaultTime.short);
+      updateState(selection.value);
       dataAfterPause = undefined;
       pom.pauseTimer();
-      if (stopBtn) {
-        toggleButtons("Start", stopBtn, selection);
-      }
       break;
 
     case "Long Break":
-      state.activeTimer = timeInMilliSeconds.long;
-      state.timerID = selection.value;
-      initDisplay(defaultTime.long);
+      updateState(selection.value);
       dataAfterPause = undefined;
       pom.pauseTimer();
-      if (stopBtn) {
-        toggleButtons("Start", stopBtn, selection);
-      }
       break;
     default:
       break;

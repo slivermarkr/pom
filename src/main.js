@@ -1,11 +1,12 @@
 import { Pomodoro } from "./pomodoro.js";
 const container = document.querySelector(".container");
 const timeContainer = document.querySelector(".timeContainer");
-const selection = document.querySelector("#selection");
+const selection = document.querySelectorAll(".selection");
+const btnGrp = document.querySelector(".btnGroup");
 
 const pom = new Pomodoro();
 
-const defaultTime = { time: 0.1, short: 0.1, long: 0.1 };
+const defaultTime = { time: 25, short: 5, long: 15 };
 let timeInMilliSeconds = pom.getTimeData(defaultTime);
 let dataAfterPause = undefined;
 
@@ -45,7 +46,7 @@ function createBtn(type) {
   return btn;
 }
 
-function toggleButtons(btnToCreate, btnToDelete, adjacentEl) {
+function toggleButtons(btnToCreate, btnToDelete, parent) {
   const btn = document.createElement("button");
   if (btnToCreate === "Start") {
     btn.setAttribute("id", "startBtn");
@@ -55,7 +56,7 @@ function toggleButtons(btnToCreate, btnToDelete, adjacentEl) {
     btn.textContent = "Stop";
   }
   btnToDelete.remove();
-  adjacentEl.insertAdjacentElement("beforebegin", btn);
+  parent.appendChild(btn);
 }
 
 function updateState(selectionId) {
@@ -85,58 +86,35 @@ function updateState(selectionId) {
       break;
   }
   if (stopBtn) {
-    toggleButtons("Start", stopBtn, selection);
+    toggleButtons("Start", stopBtn, btnGrp);
   }
+}
+
+function getNextTimer(timerID) {
+  if (timerID == "Pomodoro") {
+    ++state.loopCount;
+    if (state.loopCount === 4) {
+      state.loopCount = 0;
+      state.streak++;
+      return "Long Break";
+    } else {
+      return "Short Break";
+    }
+  }
+  return "Pomodoro";
 }
 
 function refresh(timerID) {
-  switch (timerID) {
-    case "Pomodoro":
-      ++state.loopCount;
-      if (state.loopCount === 4) {
-        state.loopCount = 0;
-        state.streak++;
-        updateState("Long Break");
-      } else {
-        updateState("Short Break");
-      }
-      break;
-
-    case "Short Break":
-      updateState("Pomodoro");
-      break;
-
-    case "Long Break":
-      updateState("Pomodoro");
-      break;
-    default:
-      break;
-  }
+  const nextTimer = getNextTimer(timerID);
+  updateState(nextTimer);
 }
 
-selection.addEventListener("change", (e) => {
-  console.log(selection.value);
-  switch (selection.value) {
-    case "Pomodoro":
-      updateState(selection.value);
-      dataAfterPause = undefined;
-      pom.pauseTimer();
-      break;
-
-    case "Short Break":
-      updateState(selection.value);
-      dataAfterPause = undefined;
-      pom.pauseTimer();
-      break;
-
-    case "Long Break":
-      updateState(selection.value);
-      dataAfterPause = undefined;
-      pom.pauseTimer();
-      break;
-    default:
-      break;
-  }
+selection.forEach(function (selectionEl) {
+  selectionEl.addEventListener("click", (e) => {
+    updateState(selectionEl.textContent);
+    dataAfterPause = undefined;
+    pom.pauseTimer();
+  });
 });
 
 function runTheTimer(timer) {
@@ -146,7 +124,7 @@ function runTheTimer(timer) {
 container.addEventListener("click", (e) => {
   if (!e.target.id.includes("startBtn")) return;
   const stopBtn = createBtn("Stop");
-  selection.insertAdjacentElement("beforebegin", stopBtn);
+  btnGrp.appendChild(stopBtn);
 
   if (state.isPaused) {
     if (dataAfterPause) {
@@ -176,6 +154,6 @@ container.addEventListener("click", (e) => {
     pom.pauseTimer();
     state.isPaused = true;
   }
-  selection.insertAdjacentElement("beforebegin", startBtn);
+  btnGrp.appendChild(startBtn);
   e.target.remove();
 });

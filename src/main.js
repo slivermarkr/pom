@@ -6,7 +6,7 @@ const btnGrp = document.querySelector(".btnGroup");
 
 const pom = new Pomodoro();
 
-const defaultTime = { time: 25, short: 5, long: 15 };
+const defaultTime = { time: 0.1, short: 0.1, long: 0.1 };
 let timeInMilliSeconds = pom.getTimeData(defaultTime);
 let dataAfterPause = undefined;
 
@@ -22,11 +22,17 @@ function pad(string) {
   return String(string).padStart(2, 0);
 }
 
-function updateDisplay(data) {
-  timeContainer.textContent = "";
-  timeContainer.textContent = `${pad(data.min)}:${pad(data.sec)}`;
-
+function fetchData(data) {
+  initDisplay(data.min, data.sec);
   dataAfterPause = data;
+}
+
+function timeOverAlert(data) {
+  pom.pauseTimer();
+  initDisplay(data.min, data.sec);
+  refresh(state.timerID);
+  console.log("Timer over");
+  console.log(state);
 }
 
 function initDisplay(min, sec = "0") {
@@ -60,6 +66,7 @@ function toggleButtons(btnToCreate, btnToDelete, parent) {
 }
 
 function updateState(selectionId) {
+  highlightCurrTimer(selectionId);
   let stopBtn = undefined;
   if (document.querySelector("#stopBtn")) {
     stopBtn = document.querySelector("#stopBtn");
@@ -69,18 +76,21 @@ function updateState(selectionId) {
       state.activeTimer = timeInMilliSeconds.time;
       state.timerID = selectionId;
       initDisplay(defaultTime.time);
+      highlightCurrTimer(selectionId);
       break;
 
     case "Short Break":
       state.activeTimer = timeInMilliSeconds.short;
       state.timerID = selectionId;
       initDisplay(defaultTime.short);
+      highlightCurrTimer(selectionId);
       break;
 
     case "Long Break":
       state.activeTimer = timeInMilliSeconds.long;
       state.timerID = selectionId;
       initDisplay(defaultTime.long);
+      highlightCurrTimer(selectionId);
       break;
     default:
       break;
@@ -111,15 +121,30 @@ function refresh(timerID) {
 
 selection.forEach(function (selectionEl) {
   selectionEl.addEventListener("click", (e) => {
-    updateState(selectionEl.textContent);
+    updateState(selectionEl.textContent.trim());
     dataAfterPause = undefined;
     pom.pauseTimer();
   });
 });
 
 function runTheTimer(timer) {
-  pom.initTimer(timer, updateDisplay);
+  pom.initTimer(timer, fetchData, timeOverAlert);
 }
+
+function highlightCurrTimer(timerID) {
+  selection.forEach(function (selectionEl) {
+    selectionEl.classList.remove("hl");
+  });
+  const getId = timerID.trim().split(" ")[0];
+  const targetEl = document.querySelector(`.selection[data-id="${getId}"]`);
+  targetEl.classList.add("hl");
+}
+
+(function init() {
+  console.log(state);
+  initDisplay(defaultTime.time);
+  highlightCurrTimer(state.timerID);
+})();
 
 container.addEventListener("click", (e) => {
   if (!e.target.id.includes("startBtn")) return;
@@ -134,13 +159,6 @@ container.addEventListener("click", (e) => {
     state.isPaused = false;
   } else {
     runTheTimer(state.activeTimer);
-
-    setTimeout(function just() {
-      pom.pauseTimer();
-      console.log("before", state);
-      refresh(state.timerID);
-      console.log("after", state);
-    }, state.activeTimer);
   }
 
   e.target.remove();

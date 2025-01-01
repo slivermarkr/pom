@@ -1,40 +1,41 @@
-body{
-	background-color: rgb(40, 40, 43);
-	margin: 0 auto
+body {
+  background-color: rgb(40, 40, 43);
+  margin: 0 auto;
+}
+.hl {
+  background: red;
+}
+.container {
+  margin: 0 auto;
+  background-color: #9a2a2a;
+  width: 300px;
+  height: 400px;
+  border-radius: 12px;
 }
 
-.container{
-	margin: 0 auto;
-	background-color:	#9A2A2A ;
-	width: 300px;
-	height: 400px;
-	border-radius: 12px
-}
-
-.container{
-	display:flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	align-text: text;
-	gap: 1.3rem;
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  align-text: text;
+  gap: 1.3rem;
 }
 
 main {
-	padding:2rem 5rem;
+  padding: 2rem 5rem;
 }
-.headerContainer{
-	display: flex;
-	justify-content: space-between;
-		;
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
 }
-h1, .timeContainer {
-	font-size: 4rem;
+h1,
+.timeContainer {
+  font-size: 4rem;
 }
 
-
-.btnGroup{
-	display: flex;
-	flex-direction: column;
-	gap: 1.3rem
+.btnGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
 }

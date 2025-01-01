@@ -13,7 +13,7 @@ export function Pomodoro() {
     return timeData;
   };
 
-  const initTimer = function (timeInput, displayCallback) {
+  const initTimer = function (timeInput, displayCallback, timerOverCallback) {
     //timeInput comes in millisecons.
     const time = {
       min: undefined,
@@ -23,7 +23,7 @@ export function Pomodoro() {
 
     timerId = setInterval(function () {
       if (time.timeInMilli === 0) {
-        pauseTimer();
+        timerOverCallback(time);
         return;
       }
 

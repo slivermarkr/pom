@@ -2,17 +2,21 @@ body {
   background-color: rgb(40, 40, 43);
   margin: 0 auto;
 }
+
 body.Short {
   background-color: rgb(159, 159, 230);
   margin: 0 auto;
 }
+
 body.Long {
   background-color: rgb(167, 196, 235);
   margin: 0 auto;
 }
+
 .hl {
   background: red;
 }
+
 .container {
   margin: 0 auto;
   background-color: #9a2a2a;

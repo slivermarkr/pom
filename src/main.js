@@ -6,6 +6,7 @@ const btnGrp = document.querySelector(".btnGroup");
 
 const pom = new Pomodoro();
 
+// const defaultTime = { time: 25, short: 5, long: 15 };
 const defaultTime = { time: 0.1, short: 0.1, long: 0.1 };
 let timeInMilliSeconds = pom.getTimeData(defaultTime);
 let dataAfterPause = undefined;
@@ -35,9 +36,10 @@ function timeOverAlert(data) {
   console.log(state);
 }
 
-function initDisplay(min, sec = "0") {
+function initDisplay(min, sec = "0", message = "It's time to PomDeezNutz!") {
   timeContainer.textContent = "";
   timeContainer.textContent = `${pad(min)}:${pad(sec)}`;
+  document.title = `${pad(min)}:${pad(sec)} - ${message}`;
 }
 
 function createBtn(type) {
@@ -75,21 +77,21 @@ function updateState(selectionId) {
     case "Pomodoro":
       state.activeTimer = timeInMilliSeconds.time;
       state.timerID = selectionId;
-      initDisplay(defaultTime.time);
+      initDisplay(defaultTime.time, undefined, undefined);
       highlightCurrTimer(selectionId);
       break;
 
     case "Short Break":
       state.activeTimer = timeInMilliSeconds.short;
       state.timerID = selectionId;
-      initDisplay(defaultTime.short);
+      initDisplay(defaultTime.short, undefined, "It's time for a short break");
       highlightCurrTimer(selectionId);
       break;
 
     case "Long Break":
       state.activeTimer = timeInMilliSeconds.long;
       state.timerID = selectionId;
-      initDisplay(defaultTime.long);
+      initDisplay(defaultTime.long, undefined, "It's time for a long break");
       highlightCurrTimer(selectionId);
       break;
     default:

@@ -132,16 +132,17 @@ function runTheTimer(timer) {
 }
 
 function highlightCurrTimer(timerID) {
+  document.body.className = "";
   selection.forEach(function (selectionEl) {
     selectionEl.classList.remove("hl");
   });
   const getId = timerID.trim().split(" ")[0];
   const targetEl = document.querySelector(`.selection[data-id="${getId}"]`);
   targetEl.classList.add("hl");
+  document.body.classList.add(`${getId}`);
 }
 
 (function init() {
-  console.log(state);
   initDisplay(defaultTime.time);
   highlightCurrTimer(state.timerID);
 })();

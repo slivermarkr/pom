@@ -1,26 +1,59 @@
 body {
   background-color: rgb(40, 40, 43);
   margin: 0 auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+a {
+  text-decoration: none;
+  color: white;
+}
+.container.PomodoroTheme,
+.PomodoroTheme {
+  background-color: #e96969;
 }
 
-body.Short {
+.container.ShortTheme,
+.ShortTheme {
   background-color: rgb(159, 159, 230);
-  margin: 0 auto;
 }
 
-body.Long {
-  background-color: rgb(167, 196, 235);
-  margin: 0 auto;
+.container.LongTheme,
+.LongTheme {
+  background-color: rgb(150, 181, 223);
 }
 
-.hl {
-  background: red;
+.active {
+  background-color: rgba(0, 0, 0, 0.1);
+  font-weight: bold;
 }
 
+.streakCount {
+  color: rgba(0, 0, 0, 0.6);
+  height: 20px;
+  font-weight: bold;
+}
+
+button {
+  font-weight: 400;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 6px;
+  color: rgba(0, 0, 0, 0.8);
+  padding: 0.5rem 1rem;
+}
+
+#startBtn,
+#stopBtn {
+  font-weight: bold;
+  font-size: 20;
+  padding: 1rem 3rem;
+  color: rgba(0, 0, 0, 0.8);
+}
 .container {
   margin: 0 auto;
-  background-color: #9a2a2a;
-  width: 300px;
+  background-color: #e96969;
+  width: 400px;
   height: 400px;
   border-radius: 12px;
 }
@@ -28,9 +61,9 @@ body.Long {
 .container {
   display: flex;
   justify-content: center;
+  padding: 2rem 3rem;
   align-items: center;
   flex-direction: column;
-  align-text: text;
   gap: 1.3rem;
 }
 
@@ -41,11 +74,21 @@ main {
   display: flex;
   justify-content: space-between;
 }
-h1,
-.timeContainer {
-  font-size: 4rem;
+h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
 }
 
+.timeContainer {
+  font-size: 7rem;
+  font-weight: bold;
+  color: white;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .btnGroup {
   display: flex;
   flex-direction: column;

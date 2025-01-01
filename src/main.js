@@ -3,11 +3,12 @@ const container = document.querySelector(".container");
 const timeContainer = document.querySelector(".timeContainer");
 const selection = document.querySelectorAll(".selection");
 const btnGrp = document.querySelector(".btnGroup");
+const streakCount = document.querySelector(".streakCount");
 
 const pom = new Pomodoro();
 
-// const defaultTime = { time: 25, short: 5, long: 15 };
-const defaultTime = { time: 0.1, short: 0.1, long: 0.1 };
+const defaultTime = { time: 25, short: 5, long: 15 };
+// const defaultTime = { time: 0.1, short: 0.1, long: 0.1 };
 let timeInMilliSeconds = pom.getTimeData(defaultTime);
 let dataAfterPause = undefined;
 
@@ -40,6 +41,7 @@ function initDisplay(min, sec = "0", message = "It's time to PomDeezNutz!") {
   timeContainer.textContent = "";
   timeContainer.textContent = `${pad(min)}:${pad(sec)}`;
   document.title = `${pad(min)}:${pad(sec)} - ${message}`;
+  streakCount.textContent = `#${state.streak}`;
 }
 
 function createBtn(type) {
@@ -134,14 +136,21 @@ function runTheTimer(timer) {
 }
 
 function highlightCurrTimer(timerID) {
-  document.body.className = "";
-  selection.forEach(function (selectionEl) {
-    selectionEl.classList.remove("hl");
-  });
   const getId = timerID.trim().split(" ")[0];
+
+  const theme = `${getId}Theme`;
+
+  container.className = "container";
+
+  selection.forEach(function (selectionEl) {
+    selectionEl.className = "selection";
+    selectionEl.classList.remove("active");
+    selectionEl.classList.add(theme);
+  });
+
   const targetEl = document.querySelector(`.selection[data-id="${getId}"]`);
-  targetEl.classList.add("hl");
-  document.body.classList.add(`${getId}`);
+  targetEl.classList.add("active");
+  container.className = `container ${theme}`;
 }
 
 (function init() {

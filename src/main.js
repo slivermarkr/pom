@@ -89,7 +89,7 @@ function toggleButtons(btnToCreate, btnToDelete, parent) {
 
 function createNextBtn() {
   const btn = createBtn("Next");
-  btn.style.background = "url(../images/next-button.png) no-repeat top right";
+  btn.style.background = "url(./images/next-button.png) no-repeat top right";
   btn.addEventListener("click", () => {
     timeOverAlert();
     btn.remove();

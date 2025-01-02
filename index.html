@@ -16,10 +16,68 @@
             >Pomodoro</a
           >
         </h1>
-        <button>Settings</button>
+        <button id="settings">Settings</button>
       </div>
       <div class="container">
-        <div class="streakCount"></div>
+        <dialog id="settingsDialog">
+          <div class="dialogWrapper">
+            <span id="closeDialog">&times;</span>
+            <form>
+              <fieldset>
+                <legend>Set Timer (in minutes)</legend>
+                <p>
+                  <label for="pomInp"> Pomodoro </label>
+                  <input
+                    type="number"
+                    max="120"
+                    min="25"
+                    id="pomInp"
+                    value="25"
+                  />
+                </p>
+                <p>
+                  <label for="shortInp"> Short Break </label>
+                  <input
+                    type="number"
+                    max="15"
+                    min="5"
+                    id="shortInp"
+                    value="5"
+                  />
+                </p>
+                <p>
+                  <label for="pomInp"> Long Break </label>
+                  <input
+                    type="number"
+                    max="40"
+                    min="10"
+                    id="longInp"
+                    value="15"
+                  />
+                </p>
+              </fieldset>
+              <fieldset>
+                <legend>Interval</legend>
+                <p>
+                  <label for="longBreakIntervalInp">
+                    Change Long Break Interval
+                  </label>
+                  <input
+                    type="number"
+                    max="10"
+                    min="2"
+                    id="longBreakIntervalInp"
+                    value="4"
+                  />
+                </p>
+              </fieldset>
+              <div>
+                <button type="submit" id="edit">Edit</button>
+              </div>
+            </form>
+          </div>
+        </dialog>
+        <div class="streakCount">#0</div>
         <div class="selectionGrp">
           <button id="pomodoro" class="selection" data-id="Pomodoro">
             Pomodoro

@@ -4,11 +4,16 @@ const timeContainer = document.querySelector(".timeContainer");
 const selection = document.querySelectorAll(".selection");
 const btnGrp = document.querySelector(".btnGroup");
 const streakCount = document.querySelector(".streakCount");
+const settingsBtn = document.querySelector("#settings");
+const dialog = document.querySelector("#settingsDialog");
+const form = document.querySelector("form");
+// const editBtn = document.querySelector("#edit");
+const closeBtn = document.querySelector("#closeDialog");
 
 const pom = new Pomodoro();
 
-// const defaultTime = { time: 25, short: 5, long: 20 };
-const defaultTime = { time: 0.1, short: 0.2, long: 0.3 };
+const defaultTime = { time: 25, short: 5, long: 20 };
+let longBreakInterval = 2;
 let timeInMilliSeconds = pom.getTimeData(defaultTime);
 let dataAfterPause = undefined;
 
@@ -29,7 +34,7 @@ function fetchData(data) {
   dataAfterPause = data;
 }
 
-function timeOverAlert(data) {
+function timeOverAlert() {
   pom.pauseTimer();
   refresh(state.timerID);
 }
@@ -38,7 +43,6 @@ function initDisplay(min, sec = "0") {
   timeContainer.textContent = "";
   timeContainer.textContent = `${pad(min)}:${pad(sec)}`;
   document.title = `${pad(min)}:${pad(sec)} - ${titleDisplay(state.timerID)}`;
-  streakCount.textContent = `#${state.streak}`;
 }
 
 function titleDisplay(activeTimer) {
@@ -116,7 +120,7 @@ function updateState(selectionId) {
 function getNextTimer(timerID) {
   if (timerID == "Pomodoro") {
     ++state.loopCount;
-    if (state.loopCount === 4) {
+    if (state.loopCount === longBreakInterval) {
       state.loopCount = 0;
       state.streak++;
       return "Long Break";
@@ -130,6 +134,7 @@ function getNextTimer(timerID) {
 function refresh(timerID) {
   const nextTimer = getNextTimer(timerID);
   updateState(nextTimer);
+  streakCount.textContent = `#${state.streak}`;
 }
 
 selection.forEach(function (selectionEl) {
@@ -195,4 +200,29 @@ container.addEventListener("click", (e) => {
   }
   btnGrp.appendChild(startBtn);
   e.target.remove();
+});
+
+settingsBtn.addEventListener("click", (e) => {
+  dialog.showModal();
+});
+
+closeBtn.addEventListener("click", (e) => {
+  dialog.close();
+});
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const pomInp = form.querySelector("#pomInp").value;
+  const shortInp = form.querySelector("#shortInp").value;
+  const longInp = form.querySelector("#longInp").value;
+  const interval = form.querySelector("#longBreakIntervalInp").value;
+
+  defaultTime.time = pomInp;
+  defaultTime.short = shortInp;
+  defaultTime.long = longInp;
+  longBreakInterval = interval;
+
+  timeInMilliSeconds = pom.getTimeData(defaultTime);
+  updateState(state.timerID);
+  dialog.close();
 });

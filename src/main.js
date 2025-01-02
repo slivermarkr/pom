@@ -7,8 +7,8 @@ const streakCount = document.querySelector(".streakCount");
 
 const pom = new Pomodoro();
 
-const defaultTime = { time: 25, short: 5, long: 15 };
-// const defaultTime = { time: 0.1, short: 0.1, long: 0.1 };
+// const defaultTime = { time: 25, short: 5, long: 20 };
+const defaultTime = { time: 0.1, short: 0.2, long: 0.3 };
 let timeInMilliSeconds = pom.getTimeData(defaultTime);
 let dataAfterPause = undefined;
 
@@ -31,17 +31,26 @@ function fetchData(data) {
 
 function timeOverAlert(data) {
   pom.pauseTimer();
-  initDisplay(data.min, data.sec);
   refresh(state.timerID);
-  console.log("Timer over");
-  console.log(state);
 }
 
-function initDisplay(min, sec = "0", message = "It's time to PomDeezNutz!") {
+function initDisplay(min, sec = "0") {
   timeContainer.textContent = "";
   timeContainer.textContent = `${pad(min)}:${pad(sec)}`;
-  document.title = `${pad(min)}:${pad(sec)} - ${message}`;
+  document.title = `${pad(min)}:${pad(sec)} - ${titleDisplay(state.timerID)}`;
   streakCount.textContent = `#${state.streak}`;
+}
+
+function titleDisplay(activeTimer) {
+  let message = "";
+  activeTimer === "Pomodoro"
+    ? (message = "It's time to pomdeeznuts!")
+    : activeTimer === "Short Break"
+    ? (message = "It's time  for a short break")
+    : activeTimer === "Long Break"
+    ? (message = "It's time for long break")
+    : "Pomodoro";
+  return message;
 }
 
 function createBtn(type) {
@@ -79,7 +88,7 @@ function updateState(selectionId) {
     case "Pomodoro":
       state.activeTimer = timeInMilliSeconds.time;
       state.timerID = selectionId;
-      initDisplay(defaultTime.time, undefined, undefined);
+      initDisplay(defaultTime.time, undefined, "It's time to pomdeeznuts!");
       highlightCurrTimer(selectionId);
       break;
 
@@ -154,7 +163,7 @@ function highlightCurrTimer(timerID) {
 }
 
 (function init() {
-  initDisplay(defaultTime.time);
+  initDisplay(defaultTime.time, undefined);
   highlightCurrTimer(state.timerID);
 })();
 

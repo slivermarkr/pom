@@ -46,8 +46,8 @@ button {
 #startBtn,
 #stopBtn {
   font-weight: bold;
-  font-size: 20;
-  padding: 1rem 3rem;
+  padding: 1rem 5rem;
+  font-size: 24px;
   color: rgba(0, 0, 0, 0.8);
 }
 .container {
@@ -70,10 +70,13 @@ button {
 main {
   padding: 2rem 5rem;
 }
+
 .headerContainer {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
+  margin-bottom: 1.7rem;
 }
+
 h1 {
   font-size: 3rem;
   font-weight: bold;

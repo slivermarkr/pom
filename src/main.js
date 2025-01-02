@@ -245,7 +245,11 @@ form.addEventListener("submit", (e) => {
   defaultTime.long = form.querySelector("#longInp").value;
   longBreakInterval = +form.querySelector("#longBreakIntervalInp").value;
 
+  console.log(defaultTime);
   timeInMilliSeconds = pom.getTimeData(defaultTime);
+  console.log(timeInMilliSeconds);
+  console.log("state", state);
   timerOnclickHandler(state.timerID);
+  console.log("state", state);
   dialog.close();
 });

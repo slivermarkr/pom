@@ -4,7 +4,6 @@ export function Pomodoro() {
   let timerId = undefined;
 
   const getTimeData = function ({ time, short, long }) {
-    // we are converting minutes to milliseconds.
     const timeData = {
       time: MIN * time,
       short: MIN * short,
@@ -14,7 +13,6 @@ export function Pomodoro() {
   };
 
   const initTimer = function (timeInput, displayCallback, timerOverCallback) {
-    //timeInput comes in millisecons.
     const time = {
       min: undefined,
       sec: undefined,

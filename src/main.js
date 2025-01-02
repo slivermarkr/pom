@@ -1,4 +1,5 @@
 import { Pomodoro } from "./pomodoro.js";
+
 const container = document.querySelector(".container");
 const timeContainer = document.querySelector(".timeContainer");
 const selection = document.querySelectorAll(".selection");
@@ -68,7 +69,7 @@ function createBtn(type) {
     btn.textContent = "Stop";
   } else {
     btn.setAttribute("id", "nextBtn");
-    btn.textContent = "Next";
+    btn.textContent = "";
   }
   return btn;
 }
@@ -88,11 +89,9 @@ function toggleButtons(btnToCreate, btnToDelete, parent) {
 
 function createNextBtn() {
   const btn = createBtn("Next");
+  btn.style.background = "url(../next-button.png) no-repeat top right";
   btn.addEventListener("click", () => {
-    console.log(state);
     timeOverAlert();
-    console.log(state);
-    // refresh(state.timerID)
     btn.remove();
   });
   return btn;
@@ -101,13 +100,13 @@ function createNextBtn() {
 function timerOnclickHandler(id) {
   highlightCurrTimer(id);
   let stopBtn = undefined;
-  let nextBtn = undefined;
   if (document.querySelector("#stopBtn")) {
     stopBtn = document.querySelector("#stopBtn");
   }
   updateState(id);
   if (stopBtn) {
     toggleButtons("Start", stopBtn, btnGrp);
+    document.querySelector("#nextBtn").remove();
   }
 }
 
@@ -244,10 +243,9 @@ form.addEventListener("submit", (e) => {
   defaultTime.time = form.querySelector("#pomInp").value;
   defaultTime.short = form.querySelector("#shortInp").value;
   defaultTime.long = form.querySelector("#longInp").value;
-  longBreakInterval = form.querySelector("#longBreakIntervalInp").value;
+  longBreakInterval = +form.querySelector("#longBreakIntervalInp").value;
 
   timeInMilliSeconds = pom.getTimeData(defaultTime);
-  // updateState(state.timerID);
   timerOnclickHandler(state.timerID);
   dialog.close();
 });

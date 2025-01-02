@@ -150,7 +150,7 @@ h1 {
 }
 
 #nextBtn {
-  background: url("./next-button.png") no-repeat right top;
+  background: url("./images/next-button.png") no-repeat right top;
   position: absolute;
   width: 45px;
   height: 45px;

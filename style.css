@@ -66,11 +66,17 @@ dialog {
   border-radius: 16px;
 }
 
+form input {
+  font-size: 16px;
+}
+
 form p {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  color: rgba(0, 0, 0, 0.3);
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: lighter;
+  /* color: red(0, 0, 0, 0.4); */
 }
 
 form fieldset {

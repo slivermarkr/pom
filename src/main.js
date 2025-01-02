@@ -7,13 +7,13 @@ const streakCount = document.querySelector(".streakCount");
 const settingsBtn = document.querySelector("#settings");
 const dialog = document.querySelector("#settingsDialog");
 const form = document.querySelector("form");
-// const editBtn = document.querySelector("#edit");
 const closeBtn = document.querySelector("#closeDialog");
 
 const pom = new Pomodoro();
 
 const defaultTime = { time: 25, short: 5, long: 20 };
-let longBreakInterval = 2;
+
+let longBreakInterval = 4;
 let timeInMilliSeconds = pom.getTimeData(defaultTime);
 let dataAfterPause = undefined;
 
@@ -56,15 +56,19 @@ function titleDisplay(activeTimer) {
     : "Pomodoro";
   return message;
 }
+// TODO: create a more intuitive way of removing and adding buttons
 
 function createBtn(type) {
   const btn = document.createElement("button");
   if (type === "Start") {
     btn.setAttribute("id", "startBtn");
     btn.textContent = "Start!";
-  } else {
+  } else if (type === "Stop") {
     btn.setAttribute("id", "stopBtn");
     btn.textContent = "Stop";
+  } else {
+    btn.setAttribute("id", "nextBtn");
+    btn.textContent = "Next";
   }
   return btn;
 }
@@ -79,15 +83,35 @@ function toggleButtons(btnToCreate, btnToDelete, parent) {
     btn.textContent = "Stop";
   }
   btnToDelete.remove();
-  parent.appendChild(btn);
+  parent.append(btn);
 }
 
-function updateState(selectionId) {
-  highlightCurrTimer(selectionId);
+function createNextBtn() {
+  const btn = createBtn("Next");
+  btn.addEventListener("click", () => {
+    console.log(state);
+    timeOverAlert();
+    console.log(state);
+    // refresh(state.timerID)
+    btn.remove();
+  });
+  return btn;
+}
+
+function timerOnclickHandler(id) {
+  highlightCurrTimer(id);
   let stopBtn = undefined;
+  let nextBtn = undefined;
   if (document.querySelector("#stopBtn")) {
     stopBtn = document.querySelector("#stopBtn");
   }
+  updateState(id);
+  if (stopBtn) {
+    toggleButtons("Start", stopBtn, btnGrp);
+  }
+}
+
+function updateState(selectionId) {
   switch (selectionId) {
     case "Pomodoro":
       state.activeTimer = timeInMilliSeconds.time;
@@ -112,9 +136,6 @@ function updateState(selectionId) {
     default:
       break;
   }
-  if (stopBtn) {
-    toggleButtons("Start", stopBtn, btnGrp);
-  }
 }
 
 function getNextTimer(timerID) {
@@ -133,13 +154,13 @@ function getNextTimer(timerID) {
 
 function refresh(timerID) {
   const nextTimer = getNextTimer(timerID);
-  updateState(nextTimer);
+  timerOnclickHandler(nextTimer);
   streakCount.textContent = `#${state.streak}`;
 }
 
 selection.forEach(function (selectionEl) {
   selectionEl.addEventListener("click", (e) => {
-    updateState(selectionEl.textContent.trim());
+    timerOnclickHandler(selectionEl.textContent.trim());
     dataAfterPause = undefined;
     pom.pauseTimer();
   });
@@ -175,7 +196,9 @@ function highlightCurrTimer(timerID) {
 container.addEventListener("click", (e) => {
   if (!e.target.id.includes("startBtn")) return;
   const stopBtn = createBtn("Stop");
+  const nextBtn = createNextBtn();
   btnGrp.appendChild(stopBtn);
+  btnGrp.appendChild(nextBtn);
 
   if (state.isPaused) {
     if (dataAfterPause) {
@@ -199,11 +222,17 @@ container.addEventListener("click", (e) => {
     state.isPaused = true;
   }
   btnGrp.appendChild(startBtn);
+  document.querySelector("#nextBtn").remove();
   e.target.remove();
 });
 
 settingsBtn.addEventListener("click", (e) => {
   dialog.showModal();
+
+  form.querySelector("#pomInp").value = defaultTime.time;
+  form.querySelector("#shortInp").value = defaultTime.short;
+  form.querySelector("#longInp").value = defaultTime.long;
+  form.querySelector("#longBreakIntervalInp").value = longBreakInterval;
 });
 
 closeBtn.addEventListener("click", (e) => {
@@ -212,17 +241,13 @@ closeBtn.addEventListener("click", (e) => {
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  const pomInp = form.querySelector("#pomInp").value;
-  const shortInp = form.querySelector("#shortInp").value;
-  const longInp = form.querySelector("#longInp").value;
-  const interval = form.querySelector("#longBreakIntervalInp").value;
-
-  defaultTime.time = pomInp;
-  defaultTime.short = shortInp;
-  defaultTime.long = longInp;
-  longBreakInterval = interval;
+  defaultTime.time = form.querySelector("#pomInp").value;
+  defaultTime.short = form.querySelector("#shortInp").value;
+  defaultTime.long = form.querySelector("#longInp").value;
+  longBreakInterval = form.querySelector("#longBreakIntervalInp").value;
 
   timeInMilliSeconds = pom.getTimeData(defaultTime);
-  updateState(state.timerID);
+  // updateState(state.timerID);
+  timerOnclickHandler(state.timerID);
   dialog.close();
 });

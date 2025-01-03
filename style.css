@@ -61,6 +61,10 @@ button {
   align-items: end;
 }
 
+form div {
+  display: flex;
+  justify-content: end;
+}
 dialog {
   border: rgba(0, 0, 0, 0.8) 3px solid;
   border-radius: 16px;
